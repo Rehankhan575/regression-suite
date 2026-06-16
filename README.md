@@ -14,7 +14,7 @@ from exploratory data analysis to model evaluation and interpretation.
 
 ```text
 regression-suite/
-├── housing_final.ipynb          # Main notebook — EDA to model evaluation
+├── housing_analysis.ipynb       # Main notebook — EDA to model evaluation
 ├── best_model_pipeline.joblib   # Saved best model pipeline
 ├── train.csv                    # Dataset (Kaggle)
 ├── requirements.txt             # Dependencies
@@ -44,7 +44,7 @@ regression-suite/
 git clone https://github.com/Rehanku/regression-suite.git
 cd regression-suite
 pip install -r requirements.txt
-jupyter notebook housing_final.ipynb
+jupyter notebook housing_analysis.ipynb
 ```
 *Note: The dataset (`train.csv`) is not included in the repo. Download it from Kaggle and place it in the project root.*
 
