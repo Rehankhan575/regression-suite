@@ -1,8 +1,3 @@
-Understood. I apologize for adding those back in. Here is the exact same, perfectly formatted Markdown, completely clean and without the emojis.
-
-Copy the block below and replace everything in your `README.md`.
-
-```markdown
 # Regression Suite — Ames Housing Price Prediction
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
@@ -30,30 +25,27 @@ regression-suite/
     ├── model_comparison.png
     ├── residuals_analysis.png
     └── feature_coefficients.png
-
 ```
 
 ---
 
 ## Dataset
 
-* **Source**: [Kaggle — House Prices: Advanced Regression Techniques](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques)
-* **Size**: 1,460 rows, 81 columns
-* **Target**: SalePrice (residential home sale price in Ames, Iowa)
-* **Features**: Numeric and categorical — covering lot size, neighborhood, construction quality, basement, garage, and more.
+- **Source**: [Kaggle — House Prices: Advanced Regression Techniques](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques)
+- **Size**: 1,460 rows, 81 columns
+- **Target**: SalePrice (residential home sale price in Ames, Iowa)
+- **Features**: Numeric and categorical — covering lot size, neighborhood, construction quality, basement, garage, and more.
 
 ---
 
 ## Quick Start
 
 ```bash
-git clone [https://github.com/Rehanku/regression-suite.git](https://github.com/Rehanku/regression-suite.git)
+git clone https://github.com/Rehanku/regression-suite.git
 cd regression-suite
 pip install -r requirements.txt
 jupyter notebook housing_final.ipynb
-
 ```
-
 *Note: The dataset (`train.csv`) is not included in the repo. Download it from Kaggle and place it in the project root.*
 
 ---
@@ -61,21 +53,25 @@ jupyter notebook housing_final.ipynb
 ## Key Visuals
 
 ### Target Variable Distribution
+![Target Distribution](screenshots/target_distribution.png)
 
 ### Missing Data Pattern
+![Missing Data](screenshots/missing_data.png)
 
 ### Model Comparison (Test R² & RMSE)
+![Model Comparison](screenshots/model_comparison.png)
 
 ### Residual Analysis
+![Residual Analysis](screenshots/residuals_analysis.png)
 
 ### Feature Coefficients (Top 20)
+![Feature Coefficients](screenshots/feature_coefficients.png)
 
 ---
 
 ## Workflow
 
 ### 1. Exploratory Data Analysis
-
 * Shape, dtypes, and statistical summary across all 81 columns.
 * Missing data analysis — 19 columns with missing values identified and visualized.
 * Target variable distribution — SalePrice confirmed right-skewed (skewness = 1.88).
@@ -85,11 +81,10 @@ jupyter notebook housing_final.ipynb
 * Outlier detection using IQR — 31 outliers removed from GrLivArea.
 
 ### 2. Feature Engineering
-
 Created 7 domain-driven features from existing columns:
 
 | Feature | Formula | Rationale |
-| --- | --- | --- |
+|---|---|---|
 | **TotalSF** | TotalBsmtSF + 1stFlrSF + 2ndFlrSF | Total living area across all floors |
 | **HouseAge** | YrSold - YearBuilt | Age of house at time of sale |
 | **RemodAge** | YrSold - YearRemodAdd | Years since last remodel |
@@ -99,9 +94,7 @@ Created 7 domain-driven features from existing columns:
 | **HasBsmt** | TotalBsmtSF > 0 | Binary presence flag |
 
 ### 3. Preprocessing Pipeline
-
 Built using scikit-learn `ColumnTransformer` + `Pipeline`:
-
 * **Numeric features (12):** Median imputation → StandardScaler
 * **Categorical features (6):** Mode imputation → OneHotEncoder
 * *No data leakage — all transformations learned on training set only.*
@@ -111,7 +104,7 @@ Built using scikit-learn `ColumnTransformer` + `Pipeline`:
 ## Models Compared
 
 | Model | MAE | RMSE | R² |
-| --- | --- | --- | --- |
+|---|---|---|---|
 | Lasso | 0.0911 | 0.1263 | 0.8872 |
 | Linear Regression | 0.0920 | 0.1273 | 0.8854 |
 | ElasticNet | 0.0909 | 0.1275 | 0.8851 |
@@ -119,12 +112,12 @@ Built using scikit-learn `ColumnTransformer` + `Pipeline`:
 | Gradient Boosting | 0.0934 | 0.1335 | 0.8740 |
 | Polynomial (deg 2) | 0.0987 | 0.1411 | 0.8591 |
 
-**Metrics reported on log(SalePrice). All models trained on 80/20 train-test split.*
+*\*Metrics reported on log(SalePrice). All models trained on 80/20 train-test split.*
 
 ### Cross-Validation Results (5-Fold)
 
 | Model | CV R² Mean | CV R² Std |
-| --- | --- | --- |
+|---|---|---|
 | **Ridge (Best)** | **0.8757** | **0.0122** |
 | ElasticNet | 0.8756 | 0.0125 |
 | Lasso | 0.8751 | 0.0147 |
@@ -137,7 +130,6 @@ Built using scikit-learn `ColumnTransformer` + `Pipeline`:
 ---
 
 ## Residual Analysis
-
 * Residuals show random scatter around zero — no systematic bias detected.
 * Residual distribution approximately normal.
 * Minor heteroscedasticity at higher predicted values — expected given the 18-feature model does not capture all price drivers for luxury properties.
@@ -145,7 +137,6 @@ Built using scikit-learn `ColumnTransformer` + `Pipeline`:
 ---
 
 ## Key Insights
-
 > "A house’s overall quality rating alone can explain ~67% of its price variation. After controlling for size and neighbourhood, a pool adds almost no value in Ames, Iowa. Regularized linear models outperform more complex ones — the relationships are largely linear after proper feature engineering."
 
 * Overall quality rating is the single strongest predictor of sale price (r = 0.82).
@@ -157,7 +148,6 @@ Built using scikit-learn `ColumnTransformer` + `Pipeline`:
 ---
 
 ## Tech Stack
-
 * Python 3.x
 * pandas, numpy, scipy
 * scikit-learn
@@ -167,18 +157,12 @@ Built using scikit-learn `ColumnTransformer` + `Pipeline`:
 ---
 
 ## Roadmap (Phase 2)
-
-* [ ] FastAPI prediction endpoint (`POST /predict`)
-* [ ] Docker containerization
-* [ ] MLflow experiment tracking
-* [ ] GitHub Actions CI/CD pipeline
+- [ ] FastAPI prediction endpoint (`POST /predict`)
+- [ ] Docker containerization
+- [ ] MLflow experiment tracking
+- [ ] GitHub Actions CI/CD pipeline
 
 ---
 
 ## Author
-
 **Rehan Khan** [GitHub Profile](https://github.com/Rehanku)
-
-```
-
-```
