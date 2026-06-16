@@ -10,6 +10,17 @@ from exploratory data analysis to model evaluation and interpretation.
 
 ---
 
+## Project Highlights
+
+* **End-to-End Regression Pipeline:** Fully integrated workflow from raw data ingestion to model deployment.
+* **Domain-Driven Feature Engineering:** Creation of 7 semantic features (e.g., TotalSF, HouseAge) to maximize signal.
+* **Leakage-Safe Preprocessing:** Complete isolation of training statistics using scikit-learn's `Pipeline` and `ColumnTransformer`.
+* **Cross-Validated Evaluation:** Rigid comparison of 6 regression models using 5-fold cross-validation for stability.
+* **Interpretability & Diagnostics:** Feature coefficient analysis and residual diagnostics to verify assumptions.
+* **Production-Ready Design:** Clear path forward for FastAPI integration, Docker containerization, and MLOps tooling.
+
+---
+
 ## Project Structure
 
 ```text
@@ -48,6 +59,54 @@ pip install -r requirements.txt
 jupyter notebook housing_analysis.ipynb
 ```
 *Note: The dataset (`train.csv`) is not included in the repo. Download it from Kaggle and place it in the project root.*
+
+---
+
+## Prediction Example
+
+Below is a clean Python snippet demonstrating how to load the serialized best-performing pipeline and run inference on a new, unseen house sample:
+
+```python
+import joblib
+import pandas as pd
+import numpy as np
+
+# 1. Load the serialized best model pipeline (preprocessor + Ridge model)
+pipeline = joblib.load('best_model_pipeline.joblib')
+
+# 2. Define a new sample property matching the model's required inputs
+sample_house = {
+    'OverallQual': 7,
+    'TotalSF': 2200.0,
+    'GrLivArea': 1600.0,
+    'GarageCars': 2,
+    'TotalBsmtSF': 950.0,
+    'FullBath': 2,
+    'YearBuilt': 2005,
+    'HouseAge': 21,
+    'RemodAge': 21,
+    'HasGarage': 1,
+    'HasBsmt': 1,
+    'Has2ndFloor': 1,
+    'Neighborhood': 'CollgCr',
+    'MSZoning': 'RL',
+    'SaleCondition': 'Normal',
+    'BldgType': '1Fam',
+    'HouseStyle': '2Story',
+    'RoofStyle': 'Gable'
+}
+
+# 3. Convert dictionary to pandas DataFrame
+sample_df = pd.DataFrame([sample_house])
+
+# 4. Predict log-transformed price
+log_prediction = pipeline.predict(sample_df)[0]
+
+# 5. Convert prediction back to original scale (SalePrice in USD)
+predicted_price = np.exp(log_prediction)
+
+print(f"Predicted Sale Price: ${predicted_price:,.2f}")
+```
 
 ---
 
@@ -99,6 +158,18 @@ Built using scikit-learn `ColumnTransformer` + `Pipeline`:
 * **Numeric features (12):** Median imputation → StandardScaler
 * **Categorical features (6):** Mode imputation → OneHotEncoder
 * *No data leakage — all transformations learned on training set only.*
+
+---
+
+## Reproducibility
+
+To ensure complete reproducibility of the analysis and model outputs:
+
+* **Consistent Random State:** A seed of `random_state = 42` is strictly enforced across all data splits and randomized estimators.
+* **Rigid Data Split:** Models are trained and evaluated on an 80/20 train-test split.
+* **Leakage Prevention:** All preprocessing transformers are `fit` only on the training set, preventing any data leakage into the test set.
+* **Pipeline-Based Workflow:** Both preprocessing and models are bound inside scikit-learn `Pipeline` and `ColumnTransformer` constructs.
+* **Log-Transformed Target:** The target variable (`SalePrice`) is log-transformed during training to stabilize variance and normalize errors.
 
 ---
 
@@ -158,6 +229,7 @@ Built using scikit-learn `ColumnTransformer` + `Pipeline`:
 ---
 
 ## Roadmap (Phase 2)
+- [ ] Refactor preprocessing, training, and evaluation logic into modular `src/` components during the API deployment phase
 - [ ] FastAPI prediction endpoint (`POST /predict`)
 - [ ] Docker containerization
 - [ ] MLflow experiment tracking
