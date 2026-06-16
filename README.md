@@ -14,6 +14,7 @@ from exploratory data analysis to model evaluation and interpretation.
 
 ```text
 regression-suite/
+├── LICENSE                      # MIT License
 ├── housing_analysis.ipynb       # Main notebook — EDA to model evaluation
 ├── best_model_pipeline.joblib   # Saved best model pipeline
 ├── train.csv                    # Dataset (Kaggle)
