@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regression Suite — Ames Housing Price Prediction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #e0e0e0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        .label {
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 42px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.15;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            color: #888;
+            max-width: 580px;
+            margin-bottom: 56px;
+            font-size: 15px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            border-top: 1px solid #1a1a1a;
+            padding-top: 40px;
+            margin-bottom: 64px;
+        }
+
+        .stat-item {
+            padding-right: 32px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #1a1a1a;
+            margin: 64px 0;
+        }
+
+        .section-label {
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 48px;
+        }
+
+        .profile-card {
+            background: #111;
+            border: 1px solid #1e1e1e;
+            border-radius: 8px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .profile-card:hover {
+            border-color: #333;
+        }
+
+        .profile-card.active {
+            border-color: #fff;
+        }
+
+        .profile-name {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .profile-name.budget {
+            color: #60a5fa;
+        }
+
+        .profile-name.midrange {
+            color: #34d399;
+        }
+
+        .profile-name.luxury {
+            color: #f59e0b;
+        }
+
+        .profile-detail {
+            font-size: 12px;
+            color: #555;
+        }
+
+        .form-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .form-section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #555;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #666;
+            margin-bottom: 6px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            background: #111;
+            border: 1px solid #1e1e1e;
+            border-radius: 6px;
+            padding: 10px 12px;
+            color: #e0e0e0;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #333;
+        }
+
+        select option {
+            background: #111;
+        }
+
+        .predict-btn {
+            width: 100%;
+            margin-top: 32px;
+            padding: 14px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .predict-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .predict-btn:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        .result-card {
+            margin-top: 32px;
+            background: #111;
+            border: 1px solid #1e1e1e;
+            border-radius: 8px;
+            padding: 28px;
+            display: none;
+        }
+
+        .result-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .result-price {
+            font-size: 40px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .result-confidence {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 24px;
+        }
+
+        .price-bar-wrapper {
+            margin: 24px 0;
+        }
+
+        .price-bar-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .price-bar {
+            height: 4px;
+            background: #1a1a1a;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .price-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1e3a5f, #fff, #1e3a5f);
+            border-radius: 2px;
+            width: 100%;
+        }
+
+        .price-bar-marker {
+            position: absolute;
+            top: -4px;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            left: 50%;
+        }
+
+        .result-meta {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #1a1a1a;
+        }
+
+        .meta-item .meta-label {
+            font-size: 11px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 4px;
+        }
+
+        .meta-item .meta-value {
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+
+        .error-card {
+            margin-top: 24px;
+            background: #1a0a0a;
+            border: 1px solid #3a1a1a;
+            border-radius: 8px;
+            padding: 20px;
+            color: #f87171;
+            font-size: 13px;
+            display: none;
+        }
+
+        .footer {
+            margin-top: 80px;
+            padding-top: 32px;
+            border-top: 1px solid #1a1a1a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tech-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 11px;
+            color: #555;
+            border: 1px solid #1e1e1e;
+            border-radius: 4px;
+            padding: 4px 10px;
+        }
+
+        .github-link {
+            font-size: 12px;
+            color: #555;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .github-link:hover {
+            color: #fff;
+        }
+
+        .loading {
+            opacity: 0.6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="label">ML Portfolio Project</div>
+        <h1>Ames Housing<br>Price Prediction</h1>
+        <p class="subtitle">
+            A production-grade regression system trained on 1,429 Ames, Iowa housing transactions.
+            Predicts sale price from property characteristics using a Ridge Regression model
+            served via FastAPI and containerized with Docker.
+        </p>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value">0.8757</div>
+                <div class="stat-label">CV R² (5-fold)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">0.8841</div>
+                <div class="stat-label">Test R²</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">1,429</div>
+                <div class="stat-label">Training samples</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">18</div>
+                <div class="stat-label">Features used</div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="section-label">Try the model</div>
+        <p class="subtitle">Enter property details to predict sale price. Or load one of the example profiles below.</p>
+
+        <div class="section-label" style="margin-top:32px;">Example profiles</div>
+        <div class="profiles-grid">
+            <div class="profile-card" onclick="loadProfile('budget')">
+                <div class="profile-name budget">Budget Home</div>
+                <div class="profile-detail">Qual 5 · 1,200 sqft · 1975 build · No garage</div>
+            </div>
+            <div class="profile-card" onclick="loadProfile('midrange')">
+                <div class="profile-name midrange">Mid-Range Home</div>
+                <div class="profile-detail">Qual 7 · 2,800 sqft · 2003 build · 2-car garage</div>
+            </div>
+            <div class="profile-card" onclick="loadProfile('luxury')">
+                <div class="profile-name luxury">Luxury Home</div>
+                <div class="profile-detail">Qual 9 · 4,200 sqft · 2007 build · 3-car garage</div>
+            </div>
+        </div>
+
+        <div class="form-layout">
+            <div>
+                <div class="form-section-title">Property Details</div>
+                <div class="field">
+                    <label>Overall Quality (1–10)</label>
+                    <input type="number" id="OverallQual" min="1" max="10" value="7">
+                </div>
+                <div class="field">
+                    <label>Total SF (all floors)</label>
+                    <input type="number" id="TotalSF" value="2800">
+                </div>
+                <div class="field">
+                    <label>Above Grade Living Area (sqft)</label>
+                    <input type="number" id="GrLivArea" value="1800">
+                </div>
+                <div class="field">
+                    <label>Garage Cars</label>
+                    <input type="number" id="GarageCars" min="0" max="5" value="2">
+                </div>
+                <div class="field">
+                    <label>Total Basement SF</label>
+                    <input type="number" id="TotalBsmtSF" value="1000">
+                </div>
+                <div class="field">
+                    <label>Full Bathrooms</label>
+                    <input type="number" id="FullBath" min="0" max="5" value="2">
+                </div>
+                <div class="field">
+                    <label>Year Built</label>
+                    <input type="number" id="YearBuilt" value="2003">
+                </div>
+                <div class="field">
+                    <label>House Age (years)</label>
+                    <input type="number" id="HouseAge" value="7">
+                </div>
+                <div class="field">
+                    <label>Years Since Remodel</label>
+                    <input type="number" id="RemodAge" value="7">
+                </div>
+            </div>
+
+            <div>
+                <div class="form-section-title">Features & Location</div>
+                <div class="field">
+                    <label>Has Garage</label>
+                    <select id="HasGarage">
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Has Basement</label>
+                    <select id="HasBsmt">
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Has 2nd Floor</label>
+                    <select id="Has2ndFloor">
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Neighborhood</label>
+                    <select id="Neighborhood">
+                        <option value="CollgCr">College Creek</option>
+                        <option value="Veenker">Veenker</option>
+                        <option value="Crawfor">Crawford</option>
+                        <option value="NoRidge">Northridge</option>
+                        <option value="Mitchel">Mitchell</option>
+                        <option value="Somerst">Somerset</option>
+                        <option value="NWAmes">NW Ames</option>
+                        <option value="OldTown">Old Town</option>
+                        <option value="BrkSide">Brookside</option>
+                        <option value="NAmes">North Ames</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Zoning</label>
+                    <select id="MSZoning">
+                        <option value="RL">Residential Low Density</option>
+                        <option value="RM">Residential Medium Density</option>
+                        <option value="FV">Floating Village</option>
+                        <option value="RH">Residential High Density</option>
+                        <option value="C (all)">Commercial</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Sale Condition</label>
+                    <select id="SaleCondition">
+                        <option value="Normal">Normal</option>
+                        <option value="Abnorml">Abnormal</option>
+                        <option value="Partial">Partial</option>
+                        <option value="AdjLand">Adjacent Land</option>
+                        <option value="Alloca">Allocation</option>
+                        <option value="Family">Family</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Building Type</label>
+                    <select id="BldgType">
+                        <option value="1Fam">Single Family</option>
+                        <option value="2fmCon">Two Family Conversion</option>
+                        <option value="Duplex">Duplex</option>
+                        <option value="TwnhsE">Townhouse End Unit</option>
+                        <option value="Twnhs">Townhouse Inside Unit</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>House Style</label>
+                    <select id="HouseStyle">
+                        <option value="2Story">2 Story</option>
+                        <option value="1Story">1 Story</option>
+                        <option value="1.5Fin">1.5 Story Finished</option>
+                        <option value="SLvl">Split Level</option>
+                        <option value="SFoyer">Split Foyer</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Roof Style</label>
+                    <select id="RoofStyle">
+                        <option value="Gable">Gable</option>
+                        <option value="Hip">Hip</option>
+                        <option value="Gambrel">Gambrel</option>
+                        <option value="Mansard">Mansard</option>
+                        <option value="Flat">Flat</option>
+                        <option value="Shed">Shed</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <button class="predict-btn" onclick="predict()" id="predictBtn">Predict Sale Price</button>
+
+        <div class="error-card" id="errorCard"></div>
+
+        <div class="result-card" id="resultCard">
+            <div class="result-label">Predicted Sale Price</div>
+            <div class="result-price" id="resultPrice"></div>
+            <div class="result-confidence" id="resultConfidence"></div>
+
+            <div class="price-bar-wrapper">
+                <div class="price-bar-labels">
+                    <span id="barLow"></span>
+                    <span style="color:#fff;">Predicted</span>
+                    <span id="barHigh"></span>
+                </div>
+                <div class="price-bar">
+                    <div class="price-bar-fill"></div>
+                    <div class="price-bar-marker"></div>
+                </div>
+            </div>
+
+            <div class="result-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Model</div>
+                    <div class="meta-value" id="metaModel"></div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">CV R²</div>
+                    <div class="meta-value" id="metaCvR2"></div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Test R²</div>
+                    <div class="meta-value" id="metaTestR2"></div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Dataset</div>
+                    <div class="meta-value" id="metaDataset"></div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="footer">
+            <div class="tech-tags">
+                <span class="tag">Python</span>
+                <span class="tag">Scikit-learn</span>
+                <span class="tag">FastAPI</span>
+                <span class="tag">Docker</span>
+                <span class="tag">MLflow</span>
+                <span class="tag">Ridge Regression</span>
+                <span class="tag">Ames Housing</span>
+            </div>
+            <a href="https://github.com/RehanKhan575/regression-suite" class="github-link">View on GitHub →</a>
+        </div>
+
+    </div>
+
+    <script>
+        const API = 'https://regression-suite.onrender.com';
+
+        const profiles = {
+            budget: {
+                OverallQual: 5, TotalSF: 1400, GrLivArea: 1200, GarageCars: 0,
+                TotalBsmtSF: 200, FullBath: 1, YearBuilt: 1975, HouseAge: 35,
+                RemodAge: 20, HasGarage: 0, HasBsmt: 1, Has2ndFloor: 0,
+                Neighborhood: 'OldTown', MSZoning: 'RM', SaleCondition: 'Normal',
+                BldgType: '1Fam', HouseStyle: '1Story', RoofStyle: 'Gable'
+            },
+            midrange: {
+                OverallQual: 7, TotalSF: 2800, GrLivArea: 1800, GarageCars: 2,
+                TotalBsmtSF: 1000, FullBath: 2, YearBuilt: 2003, HouseAge: 7,
+                RemodAge: 7, HasGarage: 1, HasBsmt: 1, Has2ndFloor: 1,
+                Neighborhood: 'CollgCr', MSZoning: 'RL', SaleCondition: 'Normal',
+                BldgType: '1Fam', HouseStyle: '2Story', RoofStyle: 'Gable'
+            },
+            luxury: {
+                OverallQual: 9, TotalSF: 4200, GrLivArea: 2800, GarageCars: 3,
+                TotalBsmtSF: 1400, FullBath: 3, YearBuilt: 2007, HouseAge: 3,
+                RemodAge: 3, HasGarage: 1, HasBsmt: 1, Has2ndFloor: 1,
+                Neighborhood: 'NoRidge', MSZoning: 'RL', SaleCondition: 'Normal',
+                BldgType: '1Fam', HouseStyle: '2Story', RoofStyle: 'Hip'
+            }
+        };
+
+        function loadProfile(type) {
+            const p = profiles[type];
+            document.querySelectorAll('.profile-card').forEach(c => c.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            Object.keys(p).forEach(key => {
+                const el = document.getElementById(key);
+                if (el) el.value = p[key];
+            });
+            document.getElementById('resultCard').style.display = 'none';
+            document.getElementById('errorCard').style.display = 'none';
+        }
+
+        async function predict() {
+            const btn = document.getElementById('predictBtn');
+            const resultCard = document.getElementById('resultCard');
+            const errorCard = document.getElementById('errorCard');
+
+            resultCard.style.display = 'none';
+            errorCard.style.display = 'none';
+            btn.disabled = true;
+            btn.textContent = 'Predicting...';
+
+            const payload = {
+                OverallQual: parseInt(document.getElementById('OverallQual').value),
+                TotalSF: parseFloat(document.getElementById('TotalSF').value),
+                GrLivArea: parseFloat(document.getElementById('GrLivArea').value),
+                GarageCars: parseInt(document.getElementById('GarageCars').value),
+                TotalBsmtSF: parseFloat(document.getElementById('TotalBsmtSF').value),
+                FullBath: parseInt(document.getElementById('FullBath').value),
+                YearBuilt: parseInt(document.getElementById('YearBuilt').value),
+                HouseAge: parseInt(document.getElementById('HouseAge').value),
+                RemodAge: parseInt(document.getElementById('RemodAge').value),
+                HasGarage: parseInt(document.getElementById('HasGarage').value),
+                HasBsmt: parseInt(document.getElementById('HasBsmt').value),
+                Has2ndFloor: parseInt(document.getElementById('Has2ndFloor').value),
+                Neighborhood: document.getElementById('Neighborhood').value,
+                MSZoning: document.getElementById('MSZoning').value,
+                SaleCondition: document.getElementById('SaleCondition').value,
+                BldgType: document.getElementById('BldgType').value,
+                HouseStyle: document.getElementById('HouseStyle').value,
+                RoofStyle: document.getElementById('RoofStyle').value
+            };
+
+            try {
+                const res = await fetch(`${API}/predict`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) throw new Error(`API error: ${res.status}`);
+                const data = await res.json();
+
+                document.getElementById('resultPrice').textContent = data.price_formatted;
+                document.getElementById('resultConfidence').textContent = data.confidence_note;
+                document.getElementById('barLow').textContent = `$${Math.round(data.price_range_low).toLocaleString()}`;
+                document.getElementById('barHigh').textContent = `$${Math.round(data.price_range_high).toLocaleString()}`;
+                document.getElementById('metaModel').textContent = data.model_info.model;
+                document.getElementById('metaCvR2').textContent = data.model_info.cv_r2;
+                document.getElementById('metaTestR2').textContent = data.model_info.test_r2;
+                document.getElementById('metaDataset').textContent = data.model_info.dataset;
+
+                resultCard.style.display = 'block';
+            } catch (err) {
+                errorCard.textContent = `Error: ${err.message}. The API may be cold starting on Render free tier — wait 30 seconds and try again.`;
+                errorCard.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Predict Sale Price';
+            }
+        }
+    </script>
+</body>
+
+</html>
