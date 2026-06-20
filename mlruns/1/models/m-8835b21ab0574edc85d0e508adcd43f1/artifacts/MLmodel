@@ -1,0 +1,24 @@
+artifact_path: /Users/rehan/Desktop/housing/mlruns/1/models/m-8835b21ab0574edc85d0e508adcd43f1/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.skops
+    predict_fn: predict
+    python_version: 3.13.13
+  sklearn:
+    code: null
+    pickled_model: model.skops
+    serialization_format: skops
+    sklearn_version: 1.9.0
+    skops_trusted_types:
+    - numpy.dtype
+mlflow_version: 3.14.0
+model_id: m-8835b21ab0574edc85d0e508adcd43f1
+model_size_bytes: 248372
+model_uuid: m-8835b21ab0574edc85d0e508adcd43f1
+prompts: null
+run_id: e2f9bff5872a4051b635615980076b43
+utc_time_created: '2026-06-20 14:53:59.309139'
