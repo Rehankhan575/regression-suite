@@ -21,24 +21,23 @@ Health Check: https://regression-suite.onrender.com/health
 
 ---
 
-## Project Structure
-regression-suite/
-├── housing_analysis.ipynb       # Full notebook — EDA to model evaluation
-├── train_with_mlflow.py         # Training script with MLflow experiment tracking
-├── api.py                       # FastAPI prediction service
-├── Dockerfile                   # Docker configuration
-├── .dockerignore                # Files excluded from Docker build
-├── requirements.txt             # Full dependencies for notebook and training
-├── requirements-api.txt         # Minimal dependencies for API deployment
-├── best_model_pipeline.joblib   # Serialized best model pipeline (Ridge)
-├── docs/
-│   └── index.html               # GitHub Pages frontend
-├── screenshots/
-│   ├── target_distribution.png
-│   ├── missing_data.png
-│   ├── model_comparison.png
-│   ├── residuals_analysis.png
-│   └── feature_coefficients.png
+regression-suite/ 
+├── housing_analysis.ipynb       # Full notebook — EDA to model evaluation 
+├── train_with_mlflow.py         # Training script with MLflow experiment tracking 
+├── api.py                       # FastAPI prediction service 
+├── Dockerfile                   # Docker configuration 
+├── .dockerignore                # Files excluded from Docker build 
+├── requirements.txt             # Full dependencies for notebook and training 
+├── requirements-api.txt         # Minimal dependencies for API deployment 
+├── best_model_pipeline.joblib   # Serialized best model pipeline (Ridge) 
+├── docs/ 
+│   └── index.html               # GitHub Pages frontend 
+├── screenshots/ 
+│   ├── target_distribution.png 
+│   ├── missing_data.png 
+│   ├── model_comparison.png 
+│   ├── residuals_analysis.png 
+│   └── feature_coefficients.png 
 └── README.md
 
 ---
